@@ -27,7 +27,7 @@ public class XoreBoard {
 
                 @Override
                 public void run() {
-                    getPlayers().stream().filter(player -> player.isOnline() == false).forEach(player -> xorePlayers.remove(player));
+                    getPlayers().stream().filter(player -> !player.isOnline()).forEach(player -> xorePlayers.remove(player));
             }}.runTaskTimerAsynchronously(XoreBoardUtil.getPlugin(XoreBoardUtil.class), 0L, 20L);
         }
         this.sharedSidebar = new SharedSidebar(this);
@@ -83,8 +83,8 @@ public class XoreBoard {
      */
 
     public void addPlayer(@NotNull org.bukkit.entity.Player player) {
-        if(player.isOnline() == false || player == null) return;
-        if(this.xorePlayers.containsKey(player)) return;
+        if (!player.isOnline() || player == null) return;
+        if (this.xorePlayers.containsKey(player)) return;
         player.setScoreboard(this.scoreboard);
         final @NotNull XorePlayer xorePlayer = new XorePlayer(this, player, player.getEntityId());
 
@@ -98,12 +98,12 @@ public class XoreBoard {
      */
 
     public XorePlayer getPlayer(@NotNull org.bukkit.entity.Player player) {
-        if(this.xorePlayers.containsKey(player) && player != null && player.isOnline()) return this.xorePlayers.get(player);
+        if (this.xorePlayers.containsKey(player) && player.isOnline()) return this.xorePlayers.get(player);
         else {
             player.setScoreboard(this.scoreboard);
             this.xorePlayers.put(player, new XorePlayer(this, player, player.getEntityId()));
-                return this.xorePlayers.get(player);
-    }}
+            return this.xorePlayers.get(player);
+        }}
 
     /**
      * public void removePlayer(@NotNull org.bukkit.entity.Player player)
@@ -111,13 +111,13 @@ public class XoreBoard {
      */
 
     public void removePlayer(@NotNull org.bukkit.entity.Player player) {
-        if(player.isOnline() == false || player == null) return;
-        if(this.xorePlayers.containsKey(player)) {
+        if (!player.isOnline() || player == null) return;
+        if (this.xorePlayers.containsKey(player)) {
             final @NotNull XorePlayer xorePlayer = this.xorePlayers.get(player);
             hideSidebar(player);
 
             this.xorePlayers.remove(player);
-    }}
+        }}
 
     /**
      * public void hideSidebar(@NotNull org.bukkit.entity.Player player)
@@ -125,14 +125,14 @@ public class XoreBoard {
      */
 
     public void hideSidebar(@NotNull org.bukkit.entity.Player player) {
-        if(player.isOnline() == false || player == null) return;
-        if(this.xorePlayers.containsKey(player)) {
+        if (!player.isOnline() || player == null) return;
+        if (this.xorePlayers.containsKey(player)) {
 
             @NotNull XorePlayer xorePlayer = this.xorePlayers.get(player);
 
-            if(xorePlayer.getPrivateSidebar().isShowed()) xorePlayer.getPrivateSidebar().hideSidebar();
-            if(xorePlayer.hasShowedShared()) getSharedSidebar().hideSidebar(xorePlayer);
-    }}
+            if (xorePlayer.getPrivateSidebar().isShowed()) xorePlayer.getPrivateSidebar().hideSidebar();
+            if (xorePlayer.hasShowedShared()) getSharedSidebar().hideSidebar(xorePlayer);
+        }}
 
     @Deprecated
     private void completeUID() {}

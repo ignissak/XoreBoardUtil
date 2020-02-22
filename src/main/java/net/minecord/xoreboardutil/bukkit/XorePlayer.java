@@ -1,7 +1,6 @@
 package net.minecord.xoreboardutil.bukkit;
 
 import lombok.Getter;
-
 import org.jetbrains.annotations.NotNull;
 
 @Getter

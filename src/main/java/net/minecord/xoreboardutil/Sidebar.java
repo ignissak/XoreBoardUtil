@@ -2,7 +2,6 @@ package net.minecord.xoreboardutil;
 
 import lombok.Generated;
 import net.minecord.xoreboardutil.bukkit.XoreBoard;
-import net.minecord.xoreboardutil.bukkit.XoreBoardUtil;
 import net.minecord.xoreboardutil.bukkit.XorePlayer;
 import org.jetbrains.annotations.NotNull;
 

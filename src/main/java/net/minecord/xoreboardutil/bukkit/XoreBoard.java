@@ -1,9 +1,6 @@
 package net.minecord.xoreboardutil.bukkit;
 
 import lombok.Getter;
-import net.minecord.xoreboardutil.bukkit.event.XoreBoardCreateEvent;
-import net.minecord.xoreboardutil.bukkit.event.XoreBoardPlayerRemoveEvent;
-import net.minecord.xoreboardutil.bukkit.event.XoreBoardRemoveEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
@@ -25,9 +22,6 @@ public class XoreBoard {
         this.ID = ID;
         this.name = name;
 
-        final @NotNull XoreBoardCreateEvent xoreBoardCreateEvent = new XoreBoardCreateEvent(this);
-        XoreBoardUtil.getPlugin(XoreBoardUtil.class).getServer().getPluginManager().callEvent(xoreBoardCreateEvent);
-
         if(getEntries() != null && this.xorePlayers.size() > 0) {
             new org.bukkit.scheduler.BukkitRunnable() {
 
@@ -36,7 +30,6 @@ public class XoreBoard {
                     getPlayers().stream().filter(player -> player.isOnline() == false).forEach(player -> xorePlayers.remove(player));
             }}.runTaskTimerAsynchronously(XoreBoardUtil.getPlugin(XoreBoardUtil.class), 0L, 20L);
         }
-        XoreBoardUtil.getPlugin().getLoggerController().info("Creating new scoreboardUID: " + name);
         this.sharedSidebar = new SharedSidebar(this);
     }
 
@@ -123,8 +116,6 @@ public class XoreBoard {
             final @NotNull XorePlayer xorePlayer = this.xorePlayers.get(player);
             hideSidebar(player);
 
-            @NotNull final XoreBoardPlayerRemoveEvent event = new XoreBoardPlayerRemoveEvent(this, xorePlayer);
-            XoreBoardUtil.getPlugin(XoreBoardUtil.class).getServer().getPluginManager().callEvent(event);
             this.xorePlayers.remove(player);
     }}
 
@@ -210,8 +201,6 @@ public class XoreBoard {
         @NotNull java.util.List<org.bukkit.entity.Player> temporary = new ArrayList<org.bukkit.entity.Player>(getPlayers());
             temporary.forEach(this::removePlayer);
 
-        final @NotNull XoreBoardRemoveEvent xoreBoardRemoveEvent = new XoreBoardRemoveEvent(this.getName());
-        XoreBoardUtil.getPlugin(XoreBoardUtil.class).getServer().getPluginManager().callEvent(xoreBoardRemoveEvent);
 
         java.lang.Runtime.getRuntime().gc();
     }

@@ -5,6 +5,8 @@ main: net.minecord.xoreboardutil.bukkit.XoreBoardUtil
 version: ${project.version}
 description: Virtual Scoreboard API based on packets with no dependencies
 author: misuda12
+api-version: 1.14
 authors:
   - haelexuis
+  - iGniSsak
 website: http://www.minecord.net/projects/XoreBoardUtil

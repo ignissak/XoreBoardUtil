@@ -1,9 +1,6 @@
 package net.minecord.xoreboardutil.bukkit;
 
 import net.minecord.xoreboardutil.PostConstruct;
-import net.minecord.xoreboardutil.bukkit.controller.Controller;
-import net.minecord.xoreboardutil.bukkit.controller.LogController;
-import net.minecord.xoreboardutil.bukkit.event.XoreBoardPlayerRemoveEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +22,6 @@ public class XoreBoardUtil extends org.bukkit.plugin.java.JavaPlugin implements 
 
     private static Random random = new Random();
 
-    private @Nullable Controller logController = new LogController(this), loggerController = logController, log = logController;
 
     @Override
     @PostConstruct
@@ -43,7 +39,6 @@ public class XoreBoardUtil extends org.bukkit.plugin.java.JavaPlugin implements 
         scoreboard = org.bukkit.Bukkit.getScoreboardManager().getMainScoreboard();
 
         getServer().getPluginManager().registerEvents(this, this);
-        getLoggerController().info("Successfully enabled/initialized plugin instance");
     }
 
     @Override
@@ -51,7 +46,6 @@ public class XoreBoardUtil extends org.bukkit.plugin.java.JavaPlugin implements 
         destroy();
 
         java.lang.Runtime.getRuntime().gc();
-        getLoggerController().info("Plugin has been successfully disabled");
     }
 
     @org.bukkit.event.EventHandler
@@ -59,9 +53,6 @@ public class XoreBoardUtil extends org.bukkit.plugin.java.JavaPlugin implements 
         for(@NotNull XoreBoard xoreBoard : XoreBoardUtil.getXoreBoards().values()) {
             if(xoreBoard.getPlayers().contains(event.getPlayer()) == false) continue;
             @NotNull XorePlayer xorePlayer = xoreBoard.getPlayer(event.getPlayer());
-
-            @NotNull XoreBoardPlayerRemoveEvent xoreBoardPlayerRemoveEvent = new XoreBoardPlayerRemoveEvent(xoreBoard, xorePlayer);
-            getServer().getPluginManager().callEvent(xoreBoardPlayerRemoveEvent);
 
             xoreBoard.getPlayers().remove(event.getPlayer());
     }}
@@ -119,7 +110,6 @@ public class XoreBoardUtil extends org.bukkit.plugin.java.JavaPlugin implements 
 
     public static void removeXoreBoard(@NotNull String boardName) {
         if(xoreBoards.containsKey(boardName) == false) return;
-        getPlugin().getLoggerController().info("Removing allocated XoreBoard: " + boardName);
                 getXoreBoard(boardName).destroy();
         xoreBoards.remove(boardName);
     }
@@ -131,7 +121,6 @@ public class XoreBoardUtil extends org.bukkit.plugin.java.JavaPlugin implements 
 
     public static void removeXoreBoard(@NotNull XoreBoard xoreBoard) {
         if(xoreBoards.containsKey(xoreBoard.getName()) == false) return;
-        getPlugin().getLoggerController().info("Removing allocated XoreBoard: " + xoreBoard.getName());
         xoreBoards.remove(xoreBoard.getName());
 
         xoreBoard.destroy();
@@ -230,7 +219,6 @@ public class XoreBoardUtil extends org.bukkit.plugin.java.JavaPlugin implements 
             for(@NotNull org.bukkit.scoreboard.Team team : scoreboard.getTeams()) {
                 for(@NotNull String entryName : team.getEntries()) {
                     team.removeEntry(entryName);
-                    getPlugin().getLoggerController().info("Removing allocated team: " + entryName);
         }}}
 
         @NotNull ArrayList<XoreBoard> xoreBoards = new ArrayList<XoreBoard>(getXoreBoards().values());
@@ -246,32 +234,6 @@ public class XoreBoardUtil extends org.bukkit.plugin.java.JavaPlugin implements 
         return iterator ++;
     }
 
-    /**
-     * public LogController getLog()
-     * @return LogController
-     */
-
-    public LogController getLog(){
-        return (LogController) this.logController;
-    }
-
-    /**
-     * public LogController getLogController()
-     * @return LogController
-     */
-
-    public LogController getLogController() {
-        return (LogController) this.logController;
-    }
-
-    /**
-     * public LogController getLoggerController()
-     * @return LogController
-     */
-
-    public LogController getLoggerController() {
-        return (LogController) this.loggerController;
-    }
 
     /**
      * public static XoreBoardUtil getPlugin()

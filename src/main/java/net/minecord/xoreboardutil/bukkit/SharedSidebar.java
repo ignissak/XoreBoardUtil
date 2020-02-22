@@ -3,6 +3,7 @@ package net.minecord.xoreboardutil.bukkit;
 import lombok.Getter;
 import net.minecord.xoreboardutil.Sidebar;
 import net.minecord.xoreboardutil.SidebarType;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -20,7 +21,7 @@ public class SharedSidebar implements Sidebar {
     public SharedSidebar(@NotNull XoreBoard xoreBoard) {
         this.xoreBoard = xoreBoard;
 
-        this.displayName = org.apache.commons.lang3.StringUtils.substring(org.bukkit.ChatColor.translateAlternateColorCodes('&', xoreBoard.getName()), 0, 32);
+        this.displayName = StringUtils.substring(org.bukkit.ChatColor.translateAlternateColorCodes('&', xoreBoard.getName()), 0, 32);
     }
 
     @NotNull
@@ -36,7 +37,7 @@ public class SharedSidebar implements Sidebar {
 
     @Override
     public void setDisplayName(@NotNull String displayName) {
-        @NotNull String tempDisplayName = org.apache.commons.lang3.StringUtils.substring(org.bukkit.ChatColor.translateAlternateColorCodes('&', displayName), 0, 32);
+        @NotNull String tempDisplayName = StringUtils.substring(org.bukkit.ChatColor.translateAlternateColorCodes('&', displayName), 0, 32);
         if(getDisplayName().equals(tempDisplayName)) return;
         getXoreBoard().getXorePlayers().forEach(xorePlayer -> {
             if(xorePlayer.getPlayer().isOnline() && xorePlayer != null && xorePlayer.getPlayer() != null) {
@@ -50,7 +51,7 @@ public class SharedSidebar implements Sidebar {
     public void putLine(@NotNull String lineKey, int value) {
         getXoreBoard().getXorePlayers().forEach(xorePlayer -> {
             if(xorePlayer.getPlayer().isOnline() && xorePlayer != null && xorePlayer.getPlayer() != null) {
-                if(xorePlayer.hasShowedShared() && xorePlayer.getPrivateSidebar().isShowed() == false) sendPacket(xorePlayer, prepareVanillaPacket("PacketPlayOutScoreboardScore", org.apache.commons.lang3.StringUtils.substring(org.bukkit.ChatColor.translateAlternateColorCodes('&', lineKey), 0, 48), xorePlayer.getID(), value, XoreBoard.XoreBoardPackets.EnumScoreboardAction.CHANGE.toNamespace()));
+                if(xorePlayer.hasShowedShared() && xorePlayer.getPrivateSidebar().isShowed() == false) sendPacket(xorePlayer, prepareVanillaPacket("PacketPlayOutScoreboardScore", StringUtils.substring(org.bukkit.ChatColor.translateAlternateColorCodes('&', lineKey), 0, 48), xorePlayer.getID(), value, XoreBoard.XoreBoardPackets.EnumScoreboardAction.CHANGE.toNamespace()));
         }});
         this.lineKeys.put(lineKey, value);
     }
@@ -60,7 +61,7 @@ public class SharedSidebar implements Sidebar {
         clearLines();
         getXoreBoard().getXorePlayers().forEach(xorePlayer -> {
             if(xorePlayer.getPlayer().isOnline() && xorePlayer != null && xorePlayer.getPlayer() != null) {
-                if(xorePlayer.hasShowedShared() && xorePlayer.getPrivateSidebar().isShowed() == false) lineKeys.forEach((lineKey, value) -> sendPacket(xorePlayer, prepareVanillaPacket("PacketPlayOutScoreboardScore", org.apache.commons.lang3.StringUtils.substring(org.bukkit.ChatColor.translateAlternateColorCodes('&', lineKey), 0, 48), xorePlayer.getID(), value, XoreBoard.XoreBoardPackets.EnumScoreboardAction.CHANGE.toNamespace())));
+                if(xorePlayer.hasShowedShared() && xorePlayer.getPrivateSidebar().isShowed() == false) lineKeys.forEach((lineKey, value) -> sendPacket(xorePlayer, prepareVanillaPacket("PacketPlayOutScoreboardScore", StringUtils.substring(org.bukkit.ChatColor.translateAlternateColorCodes('&', lineKey), 0, 48), xorePlayer.getID(), value, XoreBoard.XoreBoardPackets.EnumScoreboardAction.CHANGE.toNamespace())));
         }});
         this.lineKeys.putAll(lineKeys);
     }
@@ -94,7 +95,7 @@ public class SharedSidebar implements Sidebar {
         if(this.lineKeys.containsKey(lineKey)) {
             getXoreBoard().getXorePlayers().forEach(xorePlayer -> {
                 if(xorePlayer.getPlayer().isOnline() && xorePlayer != null && xorePlayer.getPlayer() != null) {
-                    if(xorePlayer.hasShowedShared() && xorePlayer.getPrivateSidebar().isShowed() == false) sendPacket(xorePlayer, prepareVanillaPacket("PacketPlayOutScoreboardScore", org.apache.commons.lang3.StringUtils.substring(org.bukkit.ChatColor.translateAlternateColorCodes('&', lineKey), 0, 48), xorePlayer.getID(), 0, XoreBoard.XoreBoardPackets.EnumScoreboardAction.REMOVE.toNamespace()));
+                    if(xorePlayer.hasShowedShared() && xorePlayer.getPrivateSidebar().isShowed() == false) sendPacket(xorePlayer, prepareVanillaPacket("PacketPlayOutScoreboardScore", StringUtils.substring(org.bukkit.ChatColor.translateAlternateColorCodes('&', lineKey), 0, 48), xorePlayer.getID(), 0, XoreBoard.XoreBoardPackets.EnumScoreboardAction.REMOVE.toNamespace()));
             this.lineKeys.remove(lineKey);
         }});
     }}
@@ -139,7 +140,7 @@ public class SharedSidebar implements Sidebar {
             org.bukkit.Bukkit.getScheduler().runTaskAsynchronously(XoreBoardUtil.getPlugin(XoreBoardUtil.class), () -> {
                 sendPacket(xorePlayer, prepareVanillaPacket("prepareFormattedVanillaPacket", xorePlayer.getID(), this.displayName, XoreBoard.XoreBoardPackets.EnumScoreboardHealthDisplay.INTEGER.toNamespace(), 0));
                     sendPacket(xorePlayer, prepareVanillaPacket("prepareFormattedVanillaPacket", 1, xorePlayer.getID()));
-                this.lineKeys.forEach((lineKey, value) -> sendPacket(xorePlayer, prepareVanillaPacket("PacketPlayOutScoreboardScore", org.apache.commons.lang3.StringUtils.substring(org.bukkit.ChatColor.translateAlternateColorCodes('&', lineKey), 0, 48), xorePlayer.getID(), value, XoreBoard.XoreBoardPackets.EnumScoreboardAction.CHANGE.toNamespace())));
+                this.lineKeys.forEach((lineKey, value) -> sendPacket(xorePlayer, prepareVanillaPacket("PacketPlayOutScoreboardScore", StringUtils.substring(org.bukkit.ChatColor.translateAlternateColorCodes('&', lineKey), 0, 48), xorePlayer.getID(), value, XoreBoard.XoreBoardPackets.EnumScoreboardAction.CHANGE.toNamespace())));
             });
 
             xorePlayer.setShowedSharedSidebar(true);

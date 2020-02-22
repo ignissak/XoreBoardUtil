@@ -4,7 +4,6 @@ import lombok.Generated;
 import net.minecord.xoreboardutil.bukkit.XoreBoard;
 import net.minecord.xoreboardutil.bukkit.XoreBoardUtil;
 import net.minecord.xoreboardutil.bukkit.XorePlayer;
-import net.minecord.xoreboardutil.bukkit.event.XoreBoardSendPacketEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
@@ -161,9 +160,6 @@ public interface Sidebar {
     default void sendPacket(@NotNull XorePlayer xorePlayer, Object packet) {
         if(xorePlayer.getPlayer().isOnline() == false) return;
         try {
-            @NotNull final XoreBoardSendPacketEvent xoreBoardSendPacketEvent = new XoreBoardSendPacketEvent(getXoreBoard(), xorePlayer.getPlayer(), packet);
-            XoreBoardUtil.getPlugin(XoreBoardUtil.class).getServer().getPluginManager().callEvent(xoreBoardSendPacketEvent);
-                if(xoreBoardSendPacketEvent.isCancelled()) return;
             Object craftPlayer = Class.forName("org.bukkit.craftbukkit." + org.bukkit.Bukkit.getServer().getClass().getPackage().getName().substring(org.bukkit.Bukkit.getServer().getClass().getPackage().getName().lastIndexOf(".") + 1) + ".entity.CraftPlayer").cast(xorePlayer.getPlayer());
             Object handle = getFieldInstance(craftPlayer, "entity");
             Object playerConnection = getFieldInstance(handle, "playerConnection");
@@ -180,9 +176,6 @@ public interface Sidebar {
     default void sendPacket(@NotNull org.bukkit.entity.Player player, Object packet) {
         if(player.isOnline() == false) return;
         try {
-            @NotNull final XoreBoardSendPacketEvent xoreBoardSendPacketEvent = new XoreBoardSendPacketEvent(getXoreBoard(), player, packet);
-            XoreBoardUtil.getPlugin(XoreBoardUtil.class).getServer().getPluginManager().callEvent(xoreBoardSendPacketEvent);
-                if(xoreBoardSendPacketEvent.isCancelled()) return;
             Object craftPlayer = Class.forName("org.bukkit.craftbukkit." + org.bukkit.Bukkit.getServer().getClass().getPackage().getName().substring(org.bukkit.Bukkit.getServer().getClass().getPackage().getName().lastIndexOf(".") + 1) + ".entity.CraftPlayer").cast(player);
             Object handle = getFieldInstance(craftPlayer, "entity");
             Object playerConnection = getFieldInstance(handle, "playerConnection");
@@ -256,12 +249,10 @@ public interface Sidebar {
     class IChatBaseComponentConverter {
         public static Object toIChatBaseComponent(@NotNull String message) {
             try {
-                if(message == null) XoreBoardUtil.getPlugin().getLoggerController().error("Couldn't convert 'null' string to IChatBaseComponent");
                 Method method = Class.forName("net.minecraft.server." + org.bukkit.Bukkit.getServer().getClass().getPackage().getName().substring(org.bukkit.Bukkit.getServer().getClass().getPackage().getName().lastIndexOf(".") + 1) + ".IChatBaseComponent$ChatSerializer").getDeclaredMethod("a", String.class);
                 method.setAccessible(true);
                 return method.invoke(null, "{\"text\":\"" + org.bukkit.ChatColor.translateAlternateColorCodes('&', message) + "\"}");
             }
             catch(final @NotNull Throwable ignored) {}
-            XoreBoardUtil.getPlugin().getLoggerController().error("Couldn't convert string to IChatBaseComponent");
             return null;
 }}}

@@ -2,7 +2,6 @@ package net.minecord.xoreboardutil.bukkit;
 
 import lombok.Getter;
 
-import net.minecord.xoreboardutil.bukkit.event.XoreBoardPlayerCreateEvent;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
@@ -21,8 +20,6 @@ public class XorePlayer {
         this.player = player;
         this.ID = getXoreBoard().getID() + "@" + ID;
 
-        @NotNull final XoreBoardPlayerCreateEvent event = new XoreBoardPlayerCreateEvent(getXoreBoard(), this);
-        XoreBoardUtil.getPlugin(XoreBoardUtil.class).getServer().getPluginManager().callEvent(event);
         this.privateSidebar = new PrivateSidebar(getXoreBoard(), this);
     }
 
